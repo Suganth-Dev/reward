@@ -69,8 +69,6 @@ const initialOrders = [
   },
 ];
 
-;
-
 const tabs = ["Confirmation", "Preparing", "Packed Orders", "Completed"];
 
 export default function OrdersPage() {
@@ -121,87 +119,85 @@ export default function OrdersPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] p-3 sm:p-4">
-      {/* Header + Search */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+    <div className="min-h-screen bg-[#F9F9F9] p-4 sm:p-6">
+      {/* Header and Search */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
         <div>
-          <h2 className="text-base sm:text-xl font-semibold">My Orders</h2>
+          <h2 className="text-lg sm:text-xl font-semibold">My Orders</h2>
           <p className="text-xs text-gray-500">
-            Last Update:{" "}
+            Last Update at:{" "}
             <span className="text-black">June 02, 2024 | 11:25 PM</span>
           </p>
         </div>
         <input
           type="text"
-          placeholder="Search Order ID / Name"
-          className="w-full sm:w-72 px-3 py-2 text-sm border border-gray-300 rounded-md"
+          placeholder="Search by Order ID or Customer Name"
+          className="border px-3 py-2 rounded-md w-full sm:w-72"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-3 overflow-x-auto sm:gap-5 border-b mb-4 pb-2">
-        {tabs.map((tab) => {
-          const tabCount = orders.filter((o) =>
-            tab === "Preparing"
-              ? o.status === "Preparing" || o.status === "Order Ready"
-              : o.status === tab
-          ).length;
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`text-sm sm:text-base whitespace-nowrap font-medium ${
-                activeTab === tab
-                  ? "text-lime-700 border-b-2 border-lime-600"
-                  : "text-gray-500 hover:text-black"
-              }`}
-            >
-              {tab} ({tabCount})
-            </button>
-          );
-        })}
+      <div className="flex flex-wrap gap-4 sm:gap-6 border-b mb-6">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`pb-2 text-sm sm:text-base font-medium ${
+              activeTab === tab
+                ? "text-lime-700 border-b-2 border-lime-600"
+                : "text-gray-500 hover:text-black"
+            }`}
+          >
+            {tab} (
+            {
+              orders.filter((o) =>
+                tab === "Preparing"
+                  ? o.status === "Preparing" || o.status === "Order Ready"
+                  : o.status === tab
+              ).length
+            }
+            )
+          </button>
+        ))}
       </div>
 
-      {/* Content Area */}
-      <div className="space-y-6">
-        {activeTab === "Confirmation" && (
-          <ConfirmationTab
-            orders={filteredOrders}
-            onStatusChange={handleStatusChange}
-          />
-        )}
+      {/* Tabs Rendering */}
+      {activeTab === "Confirmation" && (
+        <ConfirmationTab
+          orders={filteredOrders}
+          onStatusChange={handleStatusChange}
+        />
+      )}
 
-        {activeTab === "Preparing" && (
-          <div className="space-y-4">
-            <PreparingTab
-              orders={filteredOrders.filter((o) => o.status === "Preparing")}
-              onStatusChange={handleStatusChange}
-              onSelectOrder={(order) => setSelectedOrder(order)}
-            />
-            <OrderReady
-              orders={filteredOrders.filter((o) => o.status === "Order Ready")}
-              onStatusChange={handleStatusChange}
-              onGoToPackedOrders={() => setActiveTab("Packed Orders")}
-            />
-          </div>
-        )}
-
-        {activeTab === "Packed Orders" && (
-          <PackedOrdersTabs
-            orders={filteredOrders}
+      {activeTab === "Preparing" && (
+        <div className="space-y-6">
+          <PreparingTab
+            orders={filteredOrders.filter((o) => o.status === "Preparing")}
             onStatusChange={handleStatusChange}
+            onSelectOrder={(order) => setSelectedOrder(order)}
           />
-        )}
-
-        {activeTab === "Completed" && (
-          <CompletedTab
-            orders={filteredOrders}
+          <OrderReady
+            orders={filteredOrders.filter((o) => o.status === "Order Ready")}
             onStatusChange={handleStatusChange}
+            onGoToPackedOrders={() => setActiveTab("Packed Orders")}
           />
-        )}
-      </div>
+        </div>
+      )}
+
+      {activeTab === "Packed Orders" && (
+        <PackedOrdersTabs
+          orders={filteredOrders}
+          onStatusChange={handleStatusChange}
+        />
+      )}
+      {activeTab === "Completed" && (
+        <CompletedTab
+          orders={filteredOrders}
+          onStatusChange={handleStatusChange}
+        />
+      )}
 
       {/* Modal */}
       {selectedOrder && (

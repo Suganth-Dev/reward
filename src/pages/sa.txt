@@ -1,0 +1,93 @@
+ {/* Store Information */}
+            <div className="p-6 bg-white rounded-lg shadow border">
+              <h2 className="font-semibold mb-4 text-lg">Store Information</h2>
+              <div className="space-y-4">
+                <TextInput placeholder="Store Name" value={storeInfo.storeName} onChange={(e) => setStoreInfo({ ...storeInfo, storeName: e.target.value })} error={errors.storeName} />
+                <TextInput placeholder="Store Full Address" value={storeInfo.storeAddress} onChange={(e) => setStoreInfo({ ...storeInfo, storeAddress: e.target.value })} error={errors.storeAddress} />
+                <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={storeInfo.sameAsContact}
+                    onChange={() => {
+                      setStoreInfo({
+                        ...storeInfo,
+                        sameAsContact: !storeInfo.sameAsContact,
+                        storeContact: !storeInfo.sameAsContact ? storeInfo.mobileNumber : ''
+                      });
+                    }}
+                  />
+                  Same as my contact number
+                </label>
+                <div className="flex gap-2">
+                  <TextInput placeholder="Store Contact Number" type="tel" value={storeInfo.storeContact} onChange={(e) => setStoreInfo({ ...storeInfo, storeContact: e.target.value })} error={errors.storeContact} />
+                  <Button variant="secondary">Verify</Button>
+                </div>
+                <button className="flex items-center text-[#8BAD2B] text-sm font-medium hover:underline">
+                  Add Store Location
+                  <ArrowRight className="ml-1 w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Working Days */}
+            <div className="p-6 bg-white rounded-lg shadow border">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="font-semibold text-lg">Working Days</h2>
+                <button
+                  onClick={() => setStoreInfo({ ...storeInfo, workingDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] })}
+                  className="text-[#8BAD2B] text-sm hover:underline"
+                >
+                  Select All
+                </button>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                  <label key={day} className={`text-sm p-2 text-center rounded cursor-pointer ${storeInfo.workingDays.includes(day) ? 'bg-[#8BAD2B] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                    <input type="checkbox" className="hidden" checked={storeInfo.workingDays.includes(day)} onChange={() => handleWorkingDays(day)} />
+                    {day.slice(0, 3)}
+                  </label>
+                ))}
+              </div>
+              {errors.workingDays && <p className="text-sm text-red-500 mt-2">{errors.workingDays}</p>}
+            </div>
+
+            {/* Working Time */}
+            <div className="p-6 bg-white rounded-lg shadow border">
+              <h2 className="font-semibold mb-4 text-lg">Working Time</h2>
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <label className="text-sm mb-1 text-gray-600 block">Opening Time</label>
+                  <input type="time" value={storeInfo.openTime} onChange={(e) => setStoreInfo({ ...storeInfo, openTime: e.target.value })} className="w-full border px-3 py-2 rounded-md" />
+                  {errors.openTime && <p className="text-sm text-red-500 mt-1">{errors.openTime}</p>}
+                </div>
+                <div className="w-1/2">
+                  <label className="text-sm mb-1 text-gray-600 block">Closing Time</label>
+                  <input type="time" value={storeInfo.closeTime} onChange={(e) => setStoreInfo({ ...storeInfo, closeTime: e.target.value })} className="w-full border px-3 py-2 rounded-md" />
+                  {errors.closeTime && <p className="text-sm text-red-500 mt-1">{errors.closeTime}</p>}
+                </div>
+              </div>
+            </div>
+
+            {/* Store Image */}
+            <div className="p-6 bg-white rounded-lg shadow border">
+              <h2 className="font-semibold text-lg mb-2">Upload Store Image</h2>
+              <p className="text-sm text-gray-500 mb-4">Uploading image will help customer to easily recognize your store</p>
+              <label className="block w-full aspect-video border-2 border-dashed border-gray-300 rounded-lg hover:border-[#8BAD2B] cursor-pointer">
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                <div className="h-full flex flex-col items-center justify-center">
+                  <Camera className="w-8 h-8 text-gray-400 mb-2" />
+                  <span className="text-[#8BAD2B] font-medium">Add Profile Image</span>
+                  <span className="text-xs text-gray-500">Browse or take a photo</span>
+                </div>
+              </label>
+            </div>
+
+            {/* Continue Button */}
+            <div>
+              <Button className="w-full" onClick={handleContinue}>
+                Continue
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>

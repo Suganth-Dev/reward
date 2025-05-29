@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import ConfirmationTab from "../ConfirmationTab/ConfirmationTab";
-import PreparingTab from "../Prepare/PreparingTab";
-import PackedOrdersTabs from "../PackedOrderTab/PackedOrderTab";
-import CompletedTab from "../CompletedTab/CompletedTab";
-import OrderModal from "../OrderModel/OrderModel";
-import OrderReady from "../OrderReady/OrderReady";
+import ConfirmationTab from "../Order/ConfirmationTab/ConfirmationTab";
+import PreparingTab from "../Order/Prepare/PreparingTab";
+import PackedOrdersTabs from "../Order/PackedOrderTab/PackedOrderTab";
+import CompletedTab from "../Order/CompletedTab/CompletedTab";
+import OrderModal from "../Order/OrderModel/OrderModel";
+import OrderReady from "../Order/OrderReady/OrderReady";
 
 const initialOrders = [
   {
@@ -69,8 +69,6 @@ const initialOrders = [
   },
 ];
 
-;
-
 const tabs = ["Confirmation", "Preparing", "Packed Orders", "Completed"];
 
 export default function OrdersPage() {
@@ -87,15 +85,30 @@ export default function OrdersPage() {
             status: newStatus,
             ...(newStatus === "Packed Orders" && {
               packedTimeline: [
-                { label: "Store Confirmation", time: "Apr 09, 2024 | 02:00PM" },
-                { label: "Delivery Accepted", time: "Apr 10, 2024 | 03:00PM" },
-                { label: "Delivery Pickup", time: "Apr 10, 2024 | 03:30PM" },
+                {
+                  label: "Store Confirmation",
+                  time: "Apr 09, 2024 | 02:00PM",
+                },
+                {
+                  label: "Delivery Accepted",
+                  time: "Apr 10, 2024 | 03:00PM",
+                },
+                {
+                  label: "Delivery Pickup",
+                  time: "Apr 10, 2024 | 03:30PM",
+                },
               ],
             }),
             ...(newStatus === "Completed" && {
               deliveryTimeline: [
-                { label: "Delivery pickup", time: "Apr 10, 2024 | 03:30PM" },
-                { label: "Delivered", time: "Apr 10, 2024 | 06:00PM" },
+                {
+                  label: "Delivery pickup",
+                  time: "Apr 10, 2024 | 03:30PM",
+                },
+                {
+                  label: "Delivered",
+                  time: "Apr 10, 2024 | 06:00PM",
+                },
               ],
             }),
           }
@@ -164,12 +177,13 @@ export default function OrdersPage() {
         })}
       </div>
 
-      {/* Content Area */}
-      <div className="space-y-6">
+      {/* Scrollable Content Area */}
+      <div className="space-y-6 max-h-[650px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
         {activeTab === "Confirmation" && (
           <ConfirmationTab
             orders={filteredOrders}
             onStatusChange={handleStatusChange}
+            columns="grid-cols-1"
           />
         )}
 
@@ -181,7 +195,9 @@ export default function OrdersPage() {
               onSelectOrder={(order) => setSelectedOrder(order)}
             />
             <OrderReady
-              orders={filteredOrders.filter((o) => o.status === "Order Ready")}
+              orders={filteredOrders.filter(
+                (o) => o.status === "Order Ready"
+              )}
               onStatusChange={handleStatusChange}
               onGoToPackedOrders={() => setActiveTab("Packed Orders")}
             />
